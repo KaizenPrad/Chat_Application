@@ -29,18 +29,31 @@ app.use(cors({
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
 
-if(process.env.NODE_ENV==="production"){
-   
-    const FRONTEND_BUILD_PATH = path.resolve(__dirname, "frontend", "dist");
+JavaScript
 
+// src/server.js
 
-    app.use(express.static(FRONTEND_BUILD_PATH));
+// ... (existing imports and code up to app.use(cors...))
 
+app.use("/api/auth", authRoutes);
+app.use("/api/messages", messageRoutes);
 
-    app.get("*", (req, res)=>{
-        // Use the clean path variable
-        res.sendFile(path.join(FRONTEND_BUILD_PATH, "index.html"));
-    })
+if (process.env.NODE_ENV === "production") {
+    
+    // ⚠️ FIX 1: Define the absolute path to the frontend build directory
+    // This is safer than relying on '..' with path.join.
+    // Assuming 'frontend' is a sibling directory to 'backend'.
+    const FRONTEND_DIST_PATH = path.resolve(__dirname, '..', 'frontend', 'dist');
+
+    // 1. Serve static assets
+    app.use(express.static(FRONTEND_DIST_PATH));
+
+    // 2. Catch-all route (must be last)
+    // This should be the line causing the error (now line 40 if you count correctly)
+    app.get("*", (req, res) => {
+        // Use the absolute path variable to send the file
+        res.sendFile(path.join(FRONTEND_DIST_PATH, "index.html"));
+    });
 }
 
 

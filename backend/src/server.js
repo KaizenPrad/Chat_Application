@@ -50,7 +50,7 @@ if (process.env.NODE_ENV === "production") {
 
     // 2. Catch-all route (must be last)
     // This should be the line causing the error (now line 40 if you count correctly)
-    app.get("*", (req, res) => {
+    app.get("/*", (req, res) => {
         // Use the absolute path variable to send the file
         res.sendFile(path.join(FRONTEND_DIST_PATH, "index.html"));
     });

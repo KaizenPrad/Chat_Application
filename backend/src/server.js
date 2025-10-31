@@ -30,11 +30,17 @@ app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
 
 if(process.env.NODE_ENV==="production"){
-    app.use(express.static(path.join(__dirname, "../frontend/dist")));
+   
+    const FRONTEND_BUILD_PATH = path.resolve(__dirname, "frontend", "dist");
 
-    app.get("*", (req, res)=>{
-        res.sendFile(path.join(__dirname, "../frontend", "dist", "index.html"));
-    })
+
+    app.use(express.static(FRONTEND_BUILD_PATH));
+
+
+    app.get("*", (req, res)=>{
+        // Use the clean path variable
+        res.sendFile(path.join(FRONTEND_BUILD_PATH, "index.html"));
+    })
 }
 
 
